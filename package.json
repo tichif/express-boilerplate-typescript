@@ -1,7 +1,12 @@
 {
-  "name": "tk_boutique_ts",
+  "name": "express_boilerplate",
   "version": "1.0.0",
   "main": "src/server.js",
+  "author": {
+    "name": "Dalzon Charles-Hébert",
+    "email": "charlby5@gmail.com",
+    "url": "https://github.com/tichif"
+  },
   "license": "MIT",
   "scripts": {
     "start": "node build/server.js",
