@@ -4,6 +4,7 @@ import asyncHandler from '../middleware/asyncHandler';
 import { ContactType } from '../schemas/contact.schema';
 import sendMail from '../utils/sendMail';
 import config from '../config';
+import { contactTemplate } from '../templates/contact.template';
 
 // @route   GET /api/v2/contact
 // @desc    Contact the company
@@ -20,16 +21,7 @@ export const contactHandler = asyncHandler(
       from: config.fromEmail,
       to: config.toEmail,
       subject,
-      html: `
-      <html>
-      <body>
-        <p>Hello ${config.enterpriseName},</p>
-        <p>Je suis ${name}, adresse mail: <a href="mailto:${email}">${email}</a></p>
-        <p>J'écris au sujet de: ${subject}</p>
-        <p>${message}</p>
-      </body>
-    </html>
-      `,
+      html: contactTemplate({ name, email, subject, message }),
     });
 
     return res.status(200).json({

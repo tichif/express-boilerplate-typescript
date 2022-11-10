@@ -22,6 +22,10 @@ import sendMail from '../utils/sendMail';
 import Logging from '../utils/log';
 import config from '../config';
 import { signJwt } from '../utils/jwt';
+import {
+  activateAccountTemplate,
+  resetPasswordTemplate,
+} from '../templates/auth.template';
 
 // @route   POST /api/v2/register
 // @desc    Register a user
@@ -61,17 +65,7 @@ export const registerUserHandler = asyncHandler(
         from: config.fromEmail,
         to: email,
         subject: "Email d'activation de compte",
-        html: `
-        <html>
-      <body>
-        <p>Hello ${name},</p>
-        <p>Ceci est un email concernant l'activation de votre compte, veuillez cliquer sur ce lien valable pendent 10 minutes:</p>
-        <p><a href="${config.addressServer}/auth/activeaccount/${activeToken}">${config.addressServer}/auth/activeaccount/${activeToken}</a></p>
-        <img src=${config.logoAddress} alt="logo" style="height: 80px; width: 80px;">
-        <p>Cordialement, ${config.enterpriseName}.</p>
-      </body>
-    </html>
-        `,
+        html: activateAccountTemplate({ name, activeToken }),
       });
       return res.status(201).json({
         success: true,
@@ -264,17 +258,7 @@ export const resendEmailHandler = asyncHandler(
         from: config.fromEmail,
         to: email,
         subject: "Email d'activation de compte",
-        html: `
-        <html>
-      <body>
-        <p>Hello ${user.name},</p>
-        <p>Ceci est un email concernant l'activation de votre compte, veuillez cliquer sur ce lien valable pendent 10 minutes:</p>
-        <p><a href="${config.addressServer}/auth/activeaccount/${activeToken}">${config.addressServer}/auth/activeaccount/${activeToken}</a></p>
-        <img src=${config.logoAddress} alt="logo" style="height: 80px; width: 80px;">
-        <p>Cordialement, ${config.enterpriseName}.</p>
-      </body>
-    </html>
-        `,
+        html: activateAccountTemplate({ name: user.name, activeToken }),
       });
       return res.status(200).json({
         success: true,
@@ -318,18 +302,7 @@ export const sendMailForResetPasswordHandler = asyncHandler(
         from: config.fromEmail,
         to: email,
         subject: 'Email de réinitialisation de mot passe',
-        html: `
-        <html>
-      <body>
-        <p>Hello ${user.name},</p>
-        <p>Vous recevez ce message parce que vous (ou quelqu'un d'autre) avez fait la requête de réinitialiser le mot de passe de votre compte. Veuillez cliquer sur ce lien valable pendant 10 minutes:</p>
-        <p><a href="${config.addressServer}/auth/resetpassword/${resetToken}">${config.addressServer}/auth/resetpassword/${resetToken}</a></p>
-        <p>Si ce n'est pas vous, ne vous occupez pas de ce message.</p>
-        <img src=${config.logoAddress} alt="logo" style="height: 80px; width: 80px;">
-        <p>Cordialement, ${config.enterpriseName}.</p>
-      </body>
-    </html>
-        `,
+        html: resetPasswordTemplate({ name: user.name, resetToken }),
       });
       return res.status(200).json({
         success: true,
